@@ -2,7 +2,7 @@
   "name": "TP_JS_ZERBATO_BRASEY_RAJKOUMAR",
   "version": "1.0.0",
   "description": "",
-  "main": "divinity-test.js",
+  "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,8 +23,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
     "colors": "^1.2.5"
   }
 }
