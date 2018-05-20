@@ -3,13 +3,6 @@ class Unit {
     this.wounded_ = false;
     this.dead_ = false;
     this.isDefence_ = false;
-    this.timeBioDeath_ = 10000;
-  }
-
-  init() {
-    this.bioDeathTimeout_ = setTimeout(() => {
-      this.dead = true;
-    }, this.timeBioDeath);
   }
 
   fight() {
@@ -44,10 +37,6 @@ class Unit {
 
   set dead(value) {
     this.dead_ = value;
-  }
-
-  get timeBioDeath() {
-    return this.timeBioDeath_;
   }
 }
 module.exports = {Unit};
