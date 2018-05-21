@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const {colors} = require('colors');
+const chalk = require('chalk');
 const {Divinity} = require('./divinity');
 const {Unit} = require('./unit');
 
@@ -20,8 +20,8 @@ class Polis {
     this.polisID_ = b;
 
     this.attackInterval_ = 15000;
-    this.tradeInterval_ = 5000;
-    this.engageInterval_ = 10000;
+    this.tradeInterval_ = 10000;
+    this.engageInterval_ = 8000;
     this.farmingInterval_ = 20000;
 
     this.worldEvent_ = new EventEmitter();
@@ -42,30 +42,30 @@ class Polis {
     }, 2 * this.tradeInterval * (Math.random() + 0.1));
 
     this.divinity_.worldEvents.on('favor', favor => {
-      this.corn += favor.corn;
-      this.gold += favor.gold;
-      console.log('============== DIVINITE ' +
-        this.polisID + ' ===============');
-      console.log('FAVEUR');
-      console.log('=========================================');
+      this.corn_ += favor.corn;
+      this.gold_ += favor.gold;
+      console.log(chalk.magenta('============== DIVINITE ' +
+        this.polisID + ' ==============='));
+      console.log(chalk.magenta('FAVEUR'));
+      console.log(chalk.magenta('========================================='));
     });
 
     this.divinity_.worldEvents.on('blessing', blessing => {
-      this.corn += blessing.corn;
-      this.gold += blessing.gold;
-      console.log('============== DIVINITE ' +
-        this.polisID + ' ===============');
-      console.log('BLESSING');
-      console.log('=========================================');
+      this.corn_ += blessing.corn;
+      this.gold_ += blessing.gold;
+      console.log(chalk.magenta('============== DIVINITE ' +
+        this.polisID + ' ==============='));
+      console.log(chalk.magenta('BLESSING'));
+      console.log(chalk.magenta('========================================='));
     });
 
     this.divinity_.worldEvents.on('retribution', retribution => {
-      this.corn += retribution.corn;
-      this.gold += retribution.gold;
-      console.log('============== DIVINITE ' +
-        this.polisID + ' ===============');
-      console.log('RETRIBUTION');
-      console.log('=========================================');
+      this.corn_ += retribution.corn;
+      this.gold_ += retribution.gold;
+      console.log(chalk.magenta('============== DIVINITE ' +
+        this.polisID + ' ==============='));
+      console.log(chalk.magenta('RETRIBUTION'));
+      console.log(chalk.magenta('========================================='));
     });
 
     this.engageInterval_ = setInterval(() => {
@@ -97,15 +97,15 @@ class Polis {
     woundedCount = this.reserveArmy.filter(unit => unit.wounded).length;
     deadCount = this.reserveArmy.filter(unit => unit.dead).length;
 
-    this.reserveArmy = this.reserveArmy.filter(unit => !unit.dead);
+    this.reserveArmy_ = this.reserveArmy.filter(unit => !unit.dead);
 
-    console.log(woundedCount + ' blessés'.yellow + ' || ' +
-      deadCount + ' tués'.red + ' || ' +
-      this.reserveArmy.length + ' restants'.blue);
+    console.log(chalk.yellow(woundedCount + ' blessés') + ' || ' +
+      chalk.red(deadCount + ' tués') + ' || ' +
+      chalk.blue(this.reserveArmy.length + ' restants'));
   }
 
   reserveArmySplitForAttack() {
-    this.attackingArmy =
+    this.attackingArmy_ =
       this.reserveArmy.splice(0, Math.floor(this.reserveArmy.length * 0.5));
 
     this.attackingArmy.forEach(u => {
@@ -114,7 +114,7 @@ class Polis {
   }
 
   reserveArmySplitForDefence() {
-    this.defendingArmy =
+    this.defendingArmy_ =
       this.reserveArmy.splice(0, Math.floor(this.reserveArmy.length * 0.5));
 
     this.defendingArmy.forEach(u => {
@@ -123,15 +123,15 @@ class Polis {
   }
 
   defenceArmyBackToReserve() {
-    this.reserveArmy = this.reserveArmy.concat(this.defendingArmy);
+    this.reserveArmy_ = this.reserveArmy.concat(this.defendingArmy);
 
-    this.defendingArmy = [];
+    this.defendingArmy_ = [];
   }
 
   attackArmyBackToReserve() {
-    this.reserveArmy = this.reserveArmy.concat(this.attackingArmy);
+    this.reserveArmy_ = this.reserveArmy.concat(this.attackingArmy);
 
-    this.attackingArmy = [];
+    this.attackingArmy_ = [];
   }
 
   engageSoldier() {
@@ -139,7 +139,7 @@ class Polis {
     const unitsEngaged = Math.floor(goldAvailableForArmy / this.unitCost);
     for (let i = 0; i < unitsEngaged; i++) {
       this.reserveArmy.push(new Unit());
-      this.gold -= this.unitCost;
+      this.gold_ -= this.unitCost;
     }
     console.log('Ville ' + this.polisID + ' : ' +
       unitsEngaged + ' engagées || ' + this.reserveArmy.length + ' unités');
@@ -160,31 +160,30 @@ class Polis {
       }
     }
 
-    this.reserveArmy = this.reserveArmy.filter(Unit => Unit.dead === false);
+    this.reserveArmy_ = this.reserveArmy.filter(Unit => Unit.dead === false);
 
-    console.log(woundedCount + ' soignés'.green + ' || ' +
-      deadCount + ' succombent'.red + ' || ' +
-      this.reserveArmy.length + ' restants'.blue);
+    console.log(chalk.green(woundedCount + ' soignés') + ' || ' +
+      chalk.red(deadCount + ' succombent') + ' || ' +
+      chalk.blue(this.reserveArmy.length + ' restants'));
   }
 
   trade() {
-    this.corn -= Math.floor(this.corn * 0.25);
-    console.log('====== RESULTATS CARAVANE VILLE '.rainbow +
-      this.polisID + ' ======='.rainbow);
+    this.corn_ -= Math.floor(this.corn * 0.25);
+    console.log(chalk.cyan('====== RESULTATS CARAVANE VILLE ' +
+      this.polisID + ' ======='));
     if (Math.random() > this.chanceOfBeingRobbed) {
-      this.gold += Math.floor(this.gold * 0.25);
-      console.log(`La caravane reviens les poches pleines !`);
+      this.gold_ += Math.floor(this.gold * 0.25);
+      console.log(chalk.green('La caravane reviens les poches pleines !'));
     } else {
-      console.log(`La caravane s'est faite dépouillée au retour`);
+      console.log(chalk.red('La caravane s`est faite dépouillée au retour'));
     }
     console.log('Il reste à la ville ' +
       this.gold + ' or après retour du marchand');
-    console.log('=================='.rainbow +
-      '======================='.rainbow);
+    console.log(chalk.cyan('========================================='));
   }
 
   farming() {
-    this.corn += Math.floor(this.corn * 0.25);
+    this.corn_ += Math.floor(this.corn * 0.25);
     console.log(`Récolte ! Ville ${this.polisID} : ${this.corn} nourriture`);
   }
 
@@ -192,40 +191,20 @@ class Polis {
     return this.gold_;
   }
 
-  set gold(value) {
-    this.gold_ = value;
-  }
-
   get corn() {
     return this.corn_;
-  }
-
-  set corn(value) {
-    this.corn_ = value;
   }
 
   get reserveArmy() {
     return this.reserveArmy_;
   }
 
-  set reserveArmy(value) {
-    this.reserveArmy_ = value;
-  }
-
   get defendingArmy() {
     return this.defendingArmy_;
   }
 
-  set defendingArmy(value) {
-    this.defendingArmy_ = value;
-  }
-
   get attackingArmy() {
     return this.attackingArmy_;
-  }
-
-  set attackingArmy(value) {
-    this.attackingArmy_ = value;
   }
 
   get numberOfPolis() {

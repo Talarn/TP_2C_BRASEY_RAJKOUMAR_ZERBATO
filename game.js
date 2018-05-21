@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const {Polis} = require('./polis');
 
 class Game {
@@ -24,8 +25,8 @@ class Game {
   }
 
   fightBetweenPolis(a, b) {
-    console.log('Armée de la ville '.red + a +
-      ' marche vers ville '.red + b + ' !'.red);
+    console.log(chalk.red('Armée de la ville ' + a +
+      ' marche vers ville ' + b + ' !'));
     this.polisList[a].reserveArmySplitForAttack();
     this.polisList[b].reserveArmySplitForDefence();
 
@@ -35,8 +36,8 @@ class Game {
     }, this.timeFactor);
 
     setTimeout(() => {
-      console.log('== RESULTATS COMBAT ENTRE VILLE '.red +
-        a + ' et '.red + b + ' =='.red);
+      console.log(chalk.red('== RESULTATS COMBAT ENTRE VILLE ' +
+        a + ' et ' + b + ' =='));
       this.polisList[a].attackArmyBackToReserve();
       this.polisList[b].defenceArmyBackToReserve();
       console.log(`...........Ville ${a}...........`);
@@ -45,12 +46,12 @@ class Game {
       console.log(`...........Ville ${b}...........`);
       this.polisList[b].searchForSurvivor();
       this.polisList[b].divinityTouch();
-      console.log('======================'.red + '==================='.red);
+      console.log(chalk.red('========================================='));
     }, this.timeFactor);
   }
 
   tradeCaravane(a) {
-    console.log('Caravane au départ de '.rainbow + a + ' !'.rainbow);
+    console.log(chalk.cyan('Caravane au départ de ' + a + ' !'));
 
     setTimeout(() => {
       this.polisList[a].trade();
