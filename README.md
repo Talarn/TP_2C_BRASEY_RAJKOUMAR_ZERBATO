@@ -13,8 +13,19 @@ everything is automatic and quite random.
 yarn global add grunt-cli xo mocha
 ```
 
-##
-
+## XO
+Before running XO do the following steps:
+```
+cd docker-angular-serverless-js-project
+yarn install
+cd game
+yarn install
+cd ../serverless
+yarn install
+cd ../interface
+yarn install
+xo --fix
+```
 ## Getting Started
 
 * Create an empty folder where you want to install it
